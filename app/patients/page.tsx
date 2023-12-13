@@ -2,26 +2,31 @@ import React, { use } from "react";
 import PatientsTable from '@/features/patients/PatientsTable'
 import Search from "@/ui/Search";
 import { AddPatient } from "@/features/AddPatient";
+import AdminLayout from "@/ui/Layout/Admin";
+import SidebarLayout from "@/ui/side-layout";
+import { Button } from "@/components/ui/button";
+
+
 
 const Page =  async (params:any) => {
     return <>
-    <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-        <div className="flex items-center justify-between space-y-2">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">Patients</h2>
-            <p className="text-muted-foreground">
-              All patient lists is display here.
-            </p>
+    <AdminLayout>
+      <SidebarLayout>
+        <div className="hidden h-full flex-1 flex-col space-y-4 px-2 md:flex">
+        <div className="flex items-center justify-between">
+            <h2 className="text-3xl font-bold tracking-tight">Patients</h2>
+            <div className="flex items-center space-x-2">
+              <Search placeholder="Search Patients"></Search>
+            </div>
           </div>
-        </div>
         <div className="flex justify-between">
         <AddPatient />
-        <Search placeholder="Search Patients"></Search>
+        <Button variant="secondary">Export CVS</Button>
         </div>
         <PatientsTable></PatientsTable>
       </div>
-      
-      
+      </SidebarLayout>
+    </AdminLayout>
     </>;
 }
 

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { usePatients } from "./usePatients";
 import {
   Table,
@@ -13,11 +13,11 @@ import {
 } from "@/components/ui/table";
 
 import { PatientRow } from "./PatientRow";
-import { Checkbox } from "@/components/ui/checkbox";
-// import { PatientsPagination } from "./PatientPagination";
-import { Loading } from "@/ui/Loading";
 import { Empty } from "@/ui/Empty";
 import { Pagination } from "@/ui/Pagination";
+import { LoadingTable } from "@/ui/LoadingTable";
+import Error from "@/ui/error";
+
 const tHeads = [
   "name",
   "date of birth",
@@ -27,12 +27,60 @@ const tHeads = [
   // "address",
   // "medical history",
 ];
+
 export function PatientsTable() {
   const { isLoading, patients, error } = usePatients();
-  if (isLoading) return <Loading/>;
-  if (error) return "Error";
-  // if (!patients.data.data.length) return <Empty resourceName="patients" />;
-    
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [isSelectedAll,setIsSelectedAll] = useState(false);
+  let counts;
+
+  if (isLoading) return <LoadingTable/>;
+  if (error) return "Data Fatching Error";
+  if (!patients) return <Empty resourceName="patients" />;
+  if (!patients.data.data.length) return <Empty resourceName="patients" />;
+  if(patients){
+    counts = patients.data.total;
+  }
+
+  function handelCheck(patientId:number){
+    if(Array.from(selectedIds).includes(patientId)){
+      removePatientId(patientId)
+    }else{
+      addNewPatientId(patientId);
+    }
+  }
+  //this functon is for version 2
+  function isAllSelected(){
+    const intArray:any = [];
+    patients.data.data.map((patient:any)=>{intArray.push(patient.id)});
+    if(intArray.length){
+      const containsAllIntegers = intArray.every((number:number) => selectedIds.has(number));
+      setIsSelectedAll(containsAllIntegers);
+    }
+  }
+  
+  //this is for version 2
+  function handelCheckAll(){
+      // const idsSet = new Set(patients.data.data.map((patient:any) => patient.id));
+      // setSelectedIds(idsSet);
+  }
+
+  const clearselectedIds = () => {
+    setSelectedIds(new Set());
+  };
+
+  // add a new patientId
+  const addNewPatientId = (newId:any) => {
+    setSelectedIds((prevIds:any) => new Set([...prevIds, newId]));
+  };
+
+  const removePatientId = (idToRemove:any) => {
+    setSelectedIds((prevIds) => {
+      const newIds = new Set(prevIds);
+      newIds.delete(idToRemove);
+      return newIds;
+    });
+  };
     return (
       <>
           <div className="rounded-md border">
@@ -40,7 +88,11 @@ export function PatientsTable() {
               <TableHeader>
                 <TableRow>
                   <TableHead>
-                    <Checkbox></Checkbox>
+                    {/* for version 2
+                    <Checkbox
+                    checked={isSelectedAll}
+                    onClick={handelCheckAll}
+                    /> */}
                   </TableHead>
                   {tHeads.map((row, index) => (
                     <TableHead key={index}>
@@ -52,17 +104,16 @@ export function PatientsTable() {
               <TBody
                 data={patients.data.data}
                 render={(patient:any) => (
-            <PatientRow key={patient.id} patient={patient} />
-          )}
-        />
-              {/* <TableBody>
-                {patients.data.data.map((patient: any) => (
-                  <PatientRow patient={patient} key={patient.id}></PatientRow>
-                ))}
-              </TableBody> */}
+                  <PatientRow key={patient.id} patient={patient} selectedIds={selectedIds} onHandlecheck={handelCheck}/>
+                )}
+              />
               <TableFooter>
                   <TableRow>
                     <TableCell colSpan={tHeads.length + 1}>
+                    <div className="flex items-center justify-between">
+                  <div className="flex-1 text-sm text-muted-foreground">
+                    {selectedIds.size} of {patients.data.total} row(s) selected.
+                  </div> 
                     <Pagination 
                       isLoading = {isLoading}
                       current_page ={patients.data.current_page} 
@@ -73,7 +124,9 @@ export function PatientsTable() {
                       prev_page_url={patients.data.prev_page_url}
                       to={patients.data.to}
                       total={patients.data.total}
-                      last_page={patients.data.last_page}/>
+                      last_page={patients.data.last_page}
+                      />
+                  </div>
                     </TableCell>
                   </TableRow>
               </TableFooter>

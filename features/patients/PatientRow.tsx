@@ -34,7 +34,7 @@ import { useState } from "react";
 import { useDeletePatient } from "./useDeletePatient";
 import { useToast } from "@/components/ui/use-toast";
 
-export function PatientRow({ patient }: any) {
+export function PatientRow({ patient,selectedIds,onHandlecheck }: any) {
   const { toast } = useToast();
   const [openDelete, setOpenDelete] = useState(false);
   const [idToDelete, setidToDelete] = useState();
@@ -64,16 +64,20 @@ export function PatientRow({ patient }: any) {
       });
     
   }
+  // Array.from(patientIds).includes(checkboxId)
   return (
     <TableRow>
-      <TableCell>
-        <Checkbox />
+      <TableCell className="py-2">
+        <Checkbox
+        checked={Array.from(selectedIds).includes(id)}
+        onCheckedChange={()=>onHandlecheck(id)}
+        />
       </TableCell>
-      <TableCell>{name}</TableCell>
-      <TableCell>{date_of_birth}</TableCell>
-      <TableCell>{contact_number}</TableCell>
-      <TableCell>{email}</TableCell>
-      <TableCell>
+      <TableCell className="py-2">{name}</TableCell>
+      <TableCell className="py-2">{date_of_birth}</TableCell>
+      <TableCell className="py-2">{contact_number}</TableCell>
+      <TableCell className="py-2">{email}</TableCell>
+      <TableCell className="py-2">
         <Dialog>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -94,7 +98,7 @@ export function PatientRow({ patient }: any) {
                 </DialogTrigger>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <span onClick={()=>{setOpenDelete(true);setidToDelete(id);}}>delete</span>
+                <span onClick={()=>{setOpenDelete(true);setidToDelete(id);}}>Delete</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -110,8 +114,8 @@ export function PatientRow({ patient }: any) {
           </DialogContent>
         </Dialog>
       </TableCell>
-      {/* <TableCell>{address}</TableCell> */}
-      {/* <TableCell>{medical_history}</TableCell> */}
+      {/* <TableCell className="py-2">{address}</TableCell> */}
+      {/* <TableCell className="py-2">{medical_history}</TableCell> */}
       <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
         {/* <AlertDialogTrigger asChild>
           <Button variant="outline">Show Dialog</Button>

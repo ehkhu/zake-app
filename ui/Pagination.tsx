@@ -76,10 +76,6 @@ export function Pagination({
   return (
     
     <>
-    <div className="flex items-center justify-between">
-      <div className="flex-1 text-sm text-muted-foreground">
-        Showing {`${from}`} to {`${to}`} of {total} row(s).
-      </div>
       <div className="flex items-center space-x-4 lg:space-x-8">
         <div className="flex items-center space-x-2">
         <p className="text-sm font-medium">Rows per page</p>
@@ -107,7 +103,7 @@ export function Pagination({
         </div>
 
         <div className="flex items-center space-x-2">
-          <Button
+          <Button className="h-8 w-8 p-0"
             variant="outline"
             size="icon"
             onClick={() => firstPage()}
@@ -115,7 +111,7 @@ export function Pagination({
           >
             <DoubleArrowLeftIcon className="h-4 w-4" />
           </Button>
-          <Button
+          <Button className="h-8 w-8 p-0"
             variant="outline"
             size="icon"
             onClick={() => prevPage()}
@@ -123,7 +119,7 @@ export function Pagination({
           >
             <ChevronLeftIcon className="h-4 w-4" />
           </Button>
-          <Button
+          <Button className="h-8 w-8 p-0"
             variant="outline"
             size="icon"
             onClick={() => nextPage()}
@@ -131,7 +127,7 @@ export function Pagination({
           >
             <ChevronRightIcon className="h-4 w-4" />
           </Button>
-          <Button
+          <Button className="h-8 w-8 p-0"
             variant="outline"
             size="icon"
             onClick={() => lastPage()}
@@ -141,7 +137,6 @@ export function Pagination({
           </Button>
         </div>
       </div>
-    </div>
     </>
     
   );

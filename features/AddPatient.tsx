@@ -16,13 +16,12 @@ export function AddPatient(){
     <>
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default">Create New Patient</Button>
+        <Button variant="default">Add Patient</Button>
       </DialogTrigger>
       
       <DialogContent className="sm:max-w-md"  style={{ maxWidth: 650}}>
         <DialogHeader>
-          <DialogTitle>Add Patient</DialogTitle>
-          
+          <DialogTitle> Add Patient</DialogTitle>
         </DialogHeader>
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2">
