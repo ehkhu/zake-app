@@ -1,6 +1,15 @@
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 
 export function MainNav({
   className,
@@ -15,13 +24,7 @@ export function MainNav({
         href="/dashboard"
         className="text-sm font-medium transition-colors hover:text-primary"
       >
-        Overview
-      </Link>
-      <Link
-        href="/patients"
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-      >
-        Patients
+        Overviews
       </Link>
       <Link
         href="/treatments"
@@ -33,8 +36,49 @@ export function MainNav({
         href="/dashboard"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Settings
+        Expenses
       </Link>
+      <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Entry</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {/* <DropdownMenuLabel>Categories</DropdownMenuLabel> */}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+        <Link
+        href="/categories/treatments"
+        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+        Treatments
+        </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+        <Link
+        href="/categories/expenses"
+        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+        Expenses
+        </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+        <Link
+        href="/patients"
+        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+        Patients
+        </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+        <Link
+        href="/dentists"
+        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+        Dentists
+        </Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
     </nav>
   )
 }

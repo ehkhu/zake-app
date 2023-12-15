@@ -26,25 +26,25 @@ export function usePatients(){
       queryKey: ["patients",search, sortBy, page,pageSize],
       queryFn:() => getPatients({ search, sortBy, page, pageSize }),
     });
-    
-    // PRE-FETCHING
-    let pageCount = 0
-    if(patients){
-      pageCount = patients.data.last_page//Math.ceil(total / pageSize); 
-    }
-    
-  if (page < pageCount)
-    queryClient.prefetchQuery({
-      queryKey: ["patients", search, sortBy, page + 1,pageSize],
-      queryFn: () => getPatients({ search, sortBy, page: page + 1,pageSize }),
-    });
 
-  if (page > 1)
-    queryClient.prefetchQuery({
-      queryKey: ["patients", search, sortBy, page - 1,pageSize],
-      queryFn: () => getPatients({ search, sortBy, page: page - 1,pageSize }),
-    });
-    /*
+   /*
+   // PRE-FETCHING
+   let pageCount = 0
+   if(patients){
+     pageCount = patients.data.last_page//Math.ceil(total / pageSize); 
+   }
+   
+ if (page < pageCount)
+   queryClient.prefetchQuery({
+     queryKey: ["patients", search, sortBy, page + 1,pageSize],
+     queryFn: () => getPatients({ search, sortBy, page: page + 1,pageSize }),
+   });
+
+ if (page > 1)
+   queryClient.prefetchQuery({
+     queryKey: ["patients", search, sortBy, page - 1,pageSize],
+     queryFn: () => getPatients({ search, sortBy, page: page - 1,pageSize }),
+   });
     */
       return{isLoading,patients,error}
 }

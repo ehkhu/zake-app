@@ -1,10 +1,10 @@
 import React, { use } from "react";
-import PatientsTable from '@/features/patients/PatientsTable'
+import DentistsTable from '@/features/dentists/DentistsTable'
 import Search from "@/ui/Search";
-import { AddPatient } from "@/features/patients/AddPatient";
 import AdminLayout from "@/ui/Layout/Admin";
 import SidebarLayout from "@/ui/side-layout";
 import { Button } from "@/components/ui/button";
+import { AddDentist } from "@/features/dentists/AddDentist";
 
 
 
@@ -14,16 +14,16 @@ const Page =  async (params:any) => {
       <SidebarLayout>
         <div className="hidden h-full flex-1 flex-col space-y-4 px-2 md:flex">
         <div className="flex items-center justify-between">
-            <h2 className="text-3xl font-bold tracking-tight">Patients</h2>
+            <h2 className="text-3xl font-bold tracking-tight">Dentists</h2>
             <div className="flex items-center space-x-2">
-              <Search placeholder="Search Patients"></Search>
+              <Search placeholder="Search Dentists"></Search>
             </div>
           </div>
         <div className="flex justify-between">
-        <AddPatient />
+        <AddDentist />
         <Button variant="secondary">Export csv</Button>
         </div>
-        <PatientsTable></PatientsTable>
+        <DentistsTable></DentistsTable>
       </div>
       </SidebarLayout>
     </AdminLayout>
