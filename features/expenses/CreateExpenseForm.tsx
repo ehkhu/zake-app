@@ -37,6 +37,9 @@ import { useState } from "react";
 import { useCreateExpense } from "./useCreateExpense";
 import { useEditExpense } from "./useEditExpense";
 import { Check, ChevronsUpDown } from "lucide-react"
+import { useAllExpenseTypes } from "../expenseTypes/useAllExpenseTypes";
+import { useQuery } from "@tanstack/react-query";
+import { getAllExpenseTypes } from "@/services/apiExpenseTypes";
 
 
 const formSchema = z.object({
@@ -57,10 +60,20 @@ let expense_type_ids = [
 ];
 
 export function CreateExpenseForm({expensesValues = [], expenseToEdit = {}}) {
+  // console.log("Add exponse exaonseList", expList);
+  const {
+    isLoading,
+    data,
+    error,
+  }=useQuery({
+    queryKey: ["allExpenseTypes"],
+    queryFn:getAllExpenseTypes
+  });
   
   const { toast } = useToast();
   const [errors, setErrors] = useState<any>({});
-  expense_type_ids = expensesValues;
+  expense_type_ids = expensesValues = data.data;
+  
   /*
   ref model 
   id: 1,
@@ -156,7 +169,7 @@ export function CreateExpenseForm({expensesValues = [], expenseToEdit = {}}) {
           name="expense_type_id"
           render={({ field }) => (
             <FormItem className="grid grid-cols-4 items-center gap-4">
-              <FormLabel>Language</FormLabel>
+              <FormLabel>Exense On</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                 <FormControl className="col-span-3">

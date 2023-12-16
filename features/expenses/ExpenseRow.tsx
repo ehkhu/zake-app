@@ -41,7 +41,7 @@ import { useToast } from "@/components/ui/use-toast";
   "amount",
   
 */
-export function ExpenseRow({ expense,selectedIds,onHandlecheck,expList }: any) {
+export function ExpenseRow({ expense,selectedIds,onHandlecheck }: any) {
   
   const { toast } = useToast();
   const [openDelete, setOpenDelete] = useState(false);
@@ -111,7 +111,7 @@ export function ExpenseRow({ expense,selectedIds,onHandlecheck,expList }: any) {
             </DialogHeader>
             <div className="flex items-center space-x-2">
               <div className="grid flex-1 gap-2">
-                <CreateExpenseForm expensesValues={expList.data} expenseToEdit={expense} />
+                <CreateExpenseForm expenseToEdit={expense} />
                 
               </div>
             </div>

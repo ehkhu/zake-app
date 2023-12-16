@@ -27,13 +27,8 @@ export async function destoryExpense(id:number) {
 
 export async function getExpensesData() {
   const res = await fetch('http://dcms-backend.test/api/all_expense_types')
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
- 
   if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data')
   }
- 
   return res.json()
 }

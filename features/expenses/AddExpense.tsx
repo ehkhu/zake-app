@@ -10,9 +10,7 @@ import {
     DialogTrigger,
   } from "@/components/ui/dialog"
 import { CreateExpenseForm } from "./CreateExpenseForm";
-
-export function AddExpense({expList}:any){
-  console.log("Add exponse exaonseList", expList);
+export function AddExpense(){
     return (
     <>
     <Dialog>
@@ -26,7 +24,7 @@ export function AddExpense({expList}:any){
         </DialogHeader>
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2">
-            <CreateExpenseForm expensesValues={expList.data}/>
+            <CreateExpenseForm/>
           </div>
         </div>
       </DialogContent>

@@ -26,7 +26,7 @@ const tHeads = [
   "",
 ];
 
-export function ExpensesTable({expList}:any) {
+export function ExpensesTable() {
   const { isLoading, expenses, error } = useExpenses();
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [isSelectedAll,setIsSelectedAll] = useState(false);
@@ -102,7 +102,7 @@ export function ExpensesTable({expList}:any) {
               <TBody
                 data={expenses.data.data}
                 render={(expense:any) => (
-                  <ExpenseRow key={expense.id} expList={expList} expense={expense} selectedIds={selectedIds} onHandlecheck={handelCheck}/>
+                  <ExpenseRow key={expense.id} expense={expense} selectedIds={selectedIds} onHandlecheck={handelCheck}/>
                 )}
               />
               <TableFooter>

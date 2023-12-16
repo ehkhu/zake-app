@@ -13,6 +13,12 @@ export async function getExpenseTypes({ search, sortBy, page, pageSize }:any) {
   return response.data;
 }
 
+export async function getAllExpenseTypes() {
+  const response = await axios.get(
+    "http://dcms-backend.test/api/" + "all_expense_types");
+  return response.data;
+}
+
 export async function storeExpenseType(newExpenseType:any) {
   return axios.post("http://dcms-backend.test/api/" + "expense_types", newExpenseType)
 }

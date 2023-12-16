@@ -5,10 +5,17 @@ import { AddExpense } from "@/features/expenses/AddExpense";
 import AdminLayout from "@/ui/Layout/Admin";
 import SidebarLayout from "@/ui/side-layout";
 import { Button } from "@/components/ui/button";
-import { getExpensesData } from "@/services/apiExpenses";
+import { QueryClient,dehydrate,HydrationBoundary } from "@tanstack/react-query";
+import { getAllExpenseTypes } from "@/services/apiExpenseTypes";
+
+
 const Page =  async (params:any) => {
-  const data = await getExpensesData();   
-  
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["allExpenseTypes"],
+    queryFn: getAllExpenseTypes,
+  })
+
     return <>
     <AdminLayout>
       <SidebarLayout>
@@ -20,10 +27,13 @@ const Page =  async (params:any) => {
             </div>
           </div>
         <div className="flex justify-between">
-        <AddExpense expList={data}/>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <AddExpense/>
+        </HydrationBoundary>
+
         <Button variant="secondary">Export csv</Button>
         </div>
-        <ExpensesTable expList={data}></ExpensesTable>
+        <ExpensesTable></ExpensesTable>
       </div>
       </SidebarLayout>
     </AdminLayout>
