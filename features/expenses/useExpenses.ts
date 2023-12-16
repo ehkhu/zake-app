@@ -16,6 +16,9 @@ export function useExpenses(){
   // PAGINATION
   const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
 
+  // by days
+  const by_days = !searchParams.get("by_days") ? 1 : Number(searchParams.get("by_days"));
+
   // PAGINATION
   const pageSize = !searchParams.get("pageSize") ? 10 : Number(searchParams.get("pageSize"));
   const {
@@ -23,8 +26,8 @@ export function useExpenses(){
       data:expenses,
       error,
     } = useQuery({
-      queryKey: ["expenses",search, sortBy, page,pageSize],
-      queryFn:() => getExpenses({ search, sortBy, page, pageSize }),
+      queryKey: ["expenses",search, sortBy, page, pageSize, by_days],
+      queryFn:() => getExpenses({ search, sortBy, page, pageSize, by_days }),
     });
     
     /*

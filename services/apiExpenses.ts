@@ -1,12 +1,13 @@
 import axios from "axios";
-export async function getExpenses({ search, sortBy, page, pageSize }:any) {
+export async function getExpenses({ search, sortBy, page, pageSize , by_days}:any) {
   const response = await axios.get(
     "http://dcms-backend.test/api/" + "expenses",{
       params: { search,
         sortBy:sortBy.field, 
         direction:sortBy.direction, 
          page,
-         pageSize
+         pageSize,
+         by_days
          }
     }
   );

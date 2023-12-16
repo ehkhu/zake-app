@@ -22,7 +22,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
   },300);
   return (
         <Input type="search" placeholder={placeholder} 
-          className="md:w-[100px] lg:w-[300px]"
+          className="md:w-[200px] lg:w-[300px]"
           onChange={(e) => {
             handleSearch(e.target.value);
           }}

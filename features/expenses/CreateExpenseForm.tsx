@@ -3,9 +3,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { CalendarIcon } from "@radix-ui/react-icons";
+import { CalendarIcon, CodeSandboxLogoIcon } from "@radix-ui/react-icons";
 import { format, parseISO } from "date-fns";
 import { Button } from "@/components/ui/button";
+
 import {
   Command,
   CommandEmpty,
@@ -40,7 +41,10 @@ import { Check, ChevronsUpDown } from "lucide-react"
 import { useAllExpenseTypes } from "../expenseTypes/useAllExpenseTypes";
 import { useQuery } from "@tanstack/react-query";
 import { getAllExpenseTypes } from "@/services/apiExpenseTypes";
-
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Island_Moments } from "next/font/google";
+import { utcToZonedTime } from 'date-fns-tz';
+const targetTimeZone = "Asia/Yangon";
 
 const formSchema = z.object({
   notes: z.string(),
@@ -48,7 +52,7 @@ const formSchema = z.object({
     message: "Expected number, received a string"
   }),
   expense_date: z.date({
-    required_error: "A date of birth is required.",
+    required_error: "Expense Date is required.",
   }),
   expense_type_id: z.string({
     required_error: "Please select a expense_type_id.",
@@ -59,7 +63,7 @@ let expense_type_ids = [
   { label: "English", value: "en" },
 ];
 
-export function CreateExpenseForm({expensesValues = [], expenseToEdit = {}}) {
+export function CreateExpenseForm( expenseToEdit = {}) {
   // console.log("Add exponse exaonseList", expList);
   const {
     isLoading,
@@ -72,8 +76,8 @@ export function CreateExpenseForm({expensesValues = [], expenseToEdit = {}}) {
   
   const { toast } = useToast();
   const [errors, setErrors] = useState<any>({});
-  expense_type_ids = expensesValues = data.data;
-  
+  if(data) expense_type_ids = data.data;
+  const currentDate = new Date();
   /*
   ref model 
   id: 1,
@@ -95,7 +99,7 @@ export function CreateExpenseForm({expensesValues = [], expenseToEdit = {}}) {
       expense_type_id:editValues.expense_type_id.toString(),
       expense_date: new Date(editValues.expense_date),
     };
-    console.log(editValues)
+    // console.log(editValues)
   };
 
   // 1. Define form.
@@ -105,7 +109,6 @@ export function CreateExpenseForm({expensesValues = [], expenseToEdit = {}}) {
       expense_type_id:"",
       notes: "",
       amount:"",
-      expense_date: new Date(),
     },
   });
   const {createExpense,isCreating} = useCreateExpense();
@@ -116,11 +119,13 @@ export function CreateExpenseForm({expensesValues = [], expenseToEdit = {}}) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     //mutation.mutate(value);
+    
     // toast({
     //   title: "You submitted the following values:",
     //   description: (
     //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(values, null, 2)}</code>
+    //       <code className="text-white">{JSON.stringify(values, null, 2)}
+    //       </code>
     //     </pre>
     //   ),
     // })
@@ -159,7 +164,7 @@ export function CreateExpenseForm({expensesValues = [], expenseToEdit = {}}) {
       });
     }
   }
-
+  if(isLoading) return 'loading...';
   return (
     <>
       <Form {...form}>
@@ -193,8 +198,9 @@ export function CreateExpenseForm({expensesValues = [], expenseToEdit = {}}) {
                 <PopoverContent className="w-[200px] p-0">
                   <Command>
                     <CommandInput placeholder="Search expense type..." />
-                    <CommandEmpty>No expense_type_id found.</CommandEmpty>
+                    <CommandEmpty>No expense type found.</CommandEmpty>
                     <CommandGroup>
+                      <ScrollArea className="h-72 w-48">
                       {expense_type_ids.map((expense_type_id) => (
                         <CommandItem
                           value={expense_type_id.label}
@@ -214,6 +220,7 @@ export function CreateExpenseForm({expensesValues = [], expenseToEdit = {}}) {
                           {expense_type_id.label}
                         </CommandItem>
                       ))}
+                      </ScrollArea>
                     </CommandGroup>
                   </Command>
                 </PopoverContent>
@@ -230,9 +237,9 @@ export function CreateExpenseForm({expensesValues = [], expenseToEdit = {}}) {
             name="notes"
             render={({ field }) => (
               <FormItem className="grid grid-cols-4 items-center gap-4">
-                <FormLabel>Name</FormLabel>
+                <FormLabel>Note</FormLabel>
                 <FormControl className="col-span-3">
-                  <Input placeholder="Expense Name" {...field} />
+                  <Input placeholder="Expense Note" {...field} />
                 </FormControl>
                 <FormMessage className="col-span-3"/>
                 {errors.nam && (

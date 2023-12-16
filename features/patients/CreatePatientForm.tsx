@@ -72,7 +72,6 @@ export function CreatePatientForm({ patientToEdit = {}}) {
     resolver: zodResolver(formSchema),
     defaultValues: isEditSession ? editValues : {
       name: "",
-      date_of_birth: new Date(),
       contact_number: "",
       email: "",
       address: "",
