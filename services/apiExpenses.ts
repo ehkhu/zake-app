@@ -1,13 +1,14 @@
-import axios from "axios";
-export async function getExpenses({ search, sortBy, page, pageSize , by_days}:any) {
+import axios from "@/lib/axios";
+
+export async function getExpenses({ search, sortBy, page, pageSize , in_days}:any) {
   const response = await axios.get(
-    "http://dcms-backend.test/api/" + "expenses",{
+    "/api/expenses",{
       params: { search,
         sortBy:sortBy.field, 
         direction:sortBy.direction, 
          page,
          pageSize,
-         by_days
+         in_days
          }
     }
   );
@@ -15,21 +16,14 @@ export async function getExpenses({ search, sortBy, page, pageSize , by_days}:an
 }
 
 export async function storeExpense(newExpense:any) {
-  return axios.post("http://dcms-backend.test/api/" + "expenses", newExpense)
+  return axios.post("/api/expenses", newExpense)
 }
 
 export async function updateExpense(expense:any,id:number) {
-  return axios.put("http://dcms-backend.test/api/" + "expenses/"+id, expense)
+  return axios.put("/api/expenses/"+id, expense)
 }
 
 export async function destoryExpense(id:number) {
-  return axios.delete("http://dcms-backend.test/api/" + "expenses/"+id)
+  return axios.delete("/api/expenses/"+id)
 }
 
-export async function getExpensesData() {
-  const res = await fetch('http://dcms-backend.test/api/all_expense_types')
-  if (!res.ok) {
-    throw new Error('Failed to fetch data')
-  }
-  return res.json()
-}

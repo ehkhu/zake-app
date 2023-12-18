@@ -1,8 +1,8 @@
-import { getExpenses } from "@/services/apiExpenses";
+import { getTreatments } from "@/services/apiTreatments";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams} from 'next/navigation';
 
-export function useExpenses(){
+export function useTreatments(){
   // const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   
@@ -23,31 +23,31 @@ export function useExpenses(){
   const pageSize = !searchParams.get("pageSize") ? 10 : Number(searchParams.get("pageSize"));
   const {
       isLoading,
-      data:expenses,
+      data:treatments,
       error,
     } = useQuery({
-      queryKey: ["expenses",search, sortBy, page, pageSize, in_days],
-      queryFn:() => getExpenses({ search, sortBy, page, pageSize, in_days }),
+      queryKey: ["treatments",search, sortBy, page, pageSize, in_days],
+      queryFn:() => getTreatments({ search, sortBy, page, pageSize, in_days }),
     });
     
     /*
     // PRE-FETCHING
     let pageCount = 0
-    if(expenses){
-      pageCount = expenses.data.last_page//Math.ceil(total / pageSize); 
+    if(treatments){
+      pageCount = treatments.data.last_page//Math.ceil(total / pageSize); 
     }
     
   if (page < pageCount)
     queryClient.prefetchQuery({
-      queryKey: ["expenses", search, sortBy, page + 1,pageSize],
-      queryFn: () => getExpenses({ search, sortBy, page: page + 1,pageSize }),
+      queryKey: ["treatments", search, sortBy, page + 1,pageSize],
+      queryFn: () => getTreatments({ search, sortBy, page: page + 1,pageSize }),
     });
 
   if (page > 1)
     queryClient.prefetchQuery({
-      queryKey: ["expenses", search, sortBy, page - 1,pageSize],
-      queryFn: () => getExpenses({ search, sortBy, page: page - 1,pageSize }),
+      queryKey: ["treatments", search, sortBy, page - 1,pageSize],
+      queryFn: () => getTreatments({ search, sortBy, page: page - 1,pageSize }),
     });
     */
-      return{isLoading,expenses,error}
+      return{isLoading,treatments,error}
 }

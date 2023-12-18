@@ -33,7 +33,7 @@ export function MainNav({
         Treatments
       </Link>
       <Link
-        href="/dashboard"
+        href="/expenses"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Expenses
@@ -50,7 +50,7 @@ export function MainNav({
         href="/categories/treatments"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
         >
-        Treatments
+        Treatment Types
         </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
@@ -58,7 +58,7 @@ export function MainNav({
         href="/categories/expenses"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
         >
-        Expenses
+        Expense Types
         </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>

@@ -1,6 +1,8 @@
 'use client';
 
 
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
  
@@ -18,6 +20,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { Label } from '@/components/ui/label';
  
 const days = [
     {
@@ -42,8 +45,6 @@ const days = [
     },
 ]
 
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import { useDebouncedCallback } from 'use-debounce';
 export default function FilterByDays() {
   
   const searchParams = useSearchParams();
@@ -52,11 +53,11 @@ export default function FilterByDays() {
 
   const handleFilter = useDebouncedCallback((term) => {
     const params = new URLSearchParams(searchParams);
-    params.set('by_days', '1');
+    params.set('page', '1');
     if (term) {
-      params.set('by_days', term);
+      params.set('in_days', term);
     } else {
-      params.delete('by_days');
+      params.delete('in_days');
     }
     replace(`${pathname}?${params.toString()}`);
   },300);
@@ -64,11 +65,14 @@ export default function FilterByDays() {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
   React.useEffect(() => {
-    let v : string|undefined = searchParams.get('by_days')?.toString();
+    let v : string|undefined = searchParams.get('in_days')?.toString();
     setValue(v?v:"");
   },[])
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+
+    <div className='flex flex-col'>
+      <Label>By Days</Label>
+      <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -110,6 +114,7 @@ export default function FilterByDays() {
         </Command>
       </PopoverContent>
     </Popover>
+    </div>
     )
 //   return (
         // <Input type="search" placeholder={placeholder} 
@@ -117,7 +122,7 @@ export default function FilterByDays() {
         //   onChange={(e) => {
         //     handleFilter(e.target.value);
         //   }}
-        //   defaultValue={searchParams.get('by_days')?.toString()}
+        //   defaultValue={searchParams.get('in_days')?.toString()}
         // />
 //   );
 }

@@ -15,24 +15,24 @@ const sidebarNavItems = [
     href: "/dashboard",
   },
   {
+    title: "Treatments",
+    href: "/treatments",
+  },
+  {
+    title: "Expenses",
+    href: "/expenses",
+  },
+  {
+    title: "Cash-Book",
+    href: "/cashbook",
+  },
+  {
     title: "Patients",
     href: "/patients",
   },
   {
     title: "Dentists",
     href: "/dentists",
-  },
-  {
-    title: "Treatments",
-    href: "/treatments",
-  },
-  {
-    title: "Cash-Books",
-    href: "/cash-books",
-  },
-  {
-    title: "Expenses",
-    href: "/expenses",
   },
   {
     title: "Employees",

@@ -9,14 +9,13 @@ import {
     DialogTitle,
     DialogTrigger,
   } from "@/components/ui/dialog"
-import { CreateTreatmentTypeForm } from "./CreateTreatmentTypeForm";
-
-export function AddTreatmentType(){
+import { CreateTreatmentForm } from "./CreateTreatmentForm";
+export function AddTreatment(){
     return (
     <>
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default">Add New</Button>
+        <Button variant="default">New Treatment</Button>
       </DialogTrigger>
       
       <DialogContent className="sm:max-w-md"  style={{ maxWidth: 650}}>
@@ -25,7 +24,7 @@ export function AddTreatmentType(){
         </DialogHeader>
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2">
-            <CreateTreatmentTypeForm/>
+            <CreateTreatmentForm/>
           </div>
         </div>
       </DialogContent>

@@ -33,11 +33,11 @@ import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
-import { useCreateExpense } from "./useCreateExpense";
-import { useEditExpense } from "./useEditExpense";
+import { useCreateTreatment } from "./useCreateTreatment";
+import { useEditTreatment } from "./useEditTreatment";
 import { Check, ChevronsUpDown } from "lucide-react"
 import { useQuery } from "@tanstack/react-query";
-import { getAllExpenseTypes } from "@/services/apiExpenseTypes";
+import { getAllTreatmentTypes } from "@/services/apiTreatmentTypes";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const targetTimeZone = "Asia/Yangon";
@@ -47,53 +47,53 @@ const formSchema = z.object({
   amount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
     message: "Expected number, received a string"
   }),
-  expense_date: z.date({
-    required_error: "Expense Date is required.",
+  treatment_date: z.date({
+    required_error: "Treatment Date is required.",
   }),
-  expense_type_id: z.string({
-    required_error: "Please select a expense_type_id.",
+  treatment_type_id: z.string({
+    required_error: "Please select a treatment_type_id.",
   }),
 });
 
-let expense_type_ids = [
+let treatment_type_ids = [
   { label: "English", value: "en" },
 ];
 
-export function CreateExpenseForm( {expenseToEdit = {}}:any) {
+export function CreateTreatmentForm( {treatmentToEdit = {}}:any) {
   // console.log("Add exponse exaonseList", expList);
   const {
     isLoading,
     data,
     error,
   }=useQuery({
-    queryKey: ["allExpenseTypes"],
-    queryFn:getAllExpenseTypes
+    queryKey: ["allTreatmentTypes"],
+    queryFn:getAllTreatmentTypes
   });
   
   const { toast } = useToast();
   const [errors, setErrors] = useState<any>({});
-  if(data) expense_type_ids = data.data;
+  if(data) treatment_type_ids = data.data;
   const currentDate = new Date();
   /*
   ref model 
   id: 1,
   amount: "63.87",
-  expense_date: "1988-09-16",
+  treatment_date: "1988-09-16",
   notes: "Error voluptatem earum assumenda rerum. Vitae rerum sit adipisci aut quam maxime et. Aut porro ut qui facilis nihil ut.",
   created_at: "2023-12-02 15:53:00",
   updated_at: "2023-12-02 15:53:00",
-  expense_type_id: 11,
+  treatment_type_id: 11,
   */
   //for edit 
   let idToUpdate = 0;
-  let editValues:any = expenseToEdit;
+  let editValues:any = treatmentToEdit;
   const isEditSession = Boolean(editValues.id);
   if(isEditSession){
     idToUpdate = editValues.id;
     editValues = {
       ...editValues,
-      expense_type_id:editValues.expense_type_id.toString(),
-      expense_date: new Date(editValues.expense_date),
+      treatment_type_id:editValues.treatment_type_id.toString(),
+      treatment_date: new Date(editValues.treatment_date),
     };
     // console.log(editValues)
   };
@@ -102,13 +102,13 @@ export function CreateExpenseForm( {expenseToEdit = {}}:any) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: isEditSession ? editValues : {
-      expense_type_id:"",
+      treatment_type_id:"",
       notes: "",
       amount:"",
     },
   });
-  const {createExpense,isCreating} = useCreateExpense();
-  const {editExpense,isUpdating} = useEditExpense();
+  const {createTreatment,isCreating} = useCreateTreatment();
+  const {editTreatment,isUpdating} = useEditTreatment();
   const isWorking:boolean= isCreating || isUpdating;
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -127,13 +127,13 @@ export function CreateExpenseForm( {expenseToEdit = {}}:any) {
     // })
     // return 0;
     if(isEditSession){
-      editExpense({expense:values,id:idToUpdate},{onSuccess:()=>{
+      editTreatment({treatment:values,id:idToUpdate},{onSuccess:()=>{
         setErrors({});
       },
       onError: (err) => onError(err)
       });
     }else{
-      createExpense(values,{onSuccess:()=>{
+      createTreatment(values,{onSuccess:()=>{
         form.reset();
         setErrors({});
       },
@@ -167,7 +167,7 @@ export function CreateExpenseForm( {expenseToEdit = {}}:any) {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="expense_type_id"
+          name="treatment_type_id"
           render={({ field }) => (
             <FormItem className="grid grid-cols-4 items-center gap-4">
               <FormLabel>Exense On</FormLabel>
@@ -183,37 +183,37 @@ export function CreateExpenseForm( {expenseToEdit = {}}:any) {
                       )}
                     >
                       {field.value
-                        ? expense_type_ids.find(
-                            (expense_type_id) => expense_type_id.value === field.value
+                        ? treatment_type_ids.find(
+                            (treatment_type_id) => treatment_type_id.value === field.value
                           )?.label
-                        : "Select Expense ..."}
+                        : "Select Treatment ..."}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-0">
                   <Command>
-                    <CommandInput placeholder="Search expense type..." />
-                    <CommandEmpty>No expense type found.</CommandEmpty>
+                    <CommandInput placeholder="Search treatment type..." />
+                    <CommandEmpty>No treatment type found.</CommandEmpty>
                     <CommandGroup>
                       <ScrollArea className="h-72 w-48">
-                      {expense_type_ids.map((expense_type_id) => (
+                      {treatment_type_ids.map((treatment_type_id) => (
                         <CommandItem
-                          value={expense_type_id.label}
-                          key={expense_type_id.value}
+                          value={treatment_type_id.label}
+                          key={treatment_type_id.value}
                           onSelect={() => {
-                            form.setValue("expense_type_id", expense_type_id.value)
+                            form.setValue("treatment_type_id", treatment_type_id.value)
                           }}
                         >
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4",
-                              expense_type_id.value === field.value
+                              treatment_type_id.value === field.value
                                 ? "opacity-100"
                                 : "opacity-0"
                             )}
                           />
-                          {expense_type_id.label}
+                          {treatment_type_id.label}
                         </CommandItem>
                       ))}
                       </ScrollArea>
@@ -222,7 +222,7 @@ export function CreateExpenseForm( {expenseToEdit = {}}:any) {
                 </PopoverContent>
               </Popover>
               {/* <FormDescription>
-                This is the expense_type_id that will be used in the dashboard.
+                This is the treatment_type_id that will be used in the dashboard.
               </FormDescription> */}
               <FormMessage className="col-span-3"/>
             </FormItem>
@@ -235,7 +235,7 @@ export function CreateExpenseForm( {expenseToEdit = {}}:any) {
               <FormItem className="grid grid-cols-4 items-center gap-4">
                 <FormLabel>Note</FormLabel>
                 <FormControl className="col-span-3">
-                  <Input placeholder="Expense Note" {...field} />
+                  <Input placeholder="Treatment Note" {...field} />
                 </FormControl>
                 <FormMessage className="col-span-3"/>
                 {errors.nam && (
@@ -268,10 +268,10 @@ export function CreateExpenseForm( {expenseToEdit = {}}:any) {
           />
           <FormField
             control={form.control}
-            name="expense_date"
+            name="treatment_date"
             render={({ field }) => (
               <FormItem className="grid grid-cols-4 items-center gap-4">
-                <FormLabel>Expense Date</FormLabel>
+                <FormLabel>Treatment Date</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl className="col-span-3">

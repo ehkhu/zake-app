@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios from "@/lib/axios";
 export async function getDentists({ search, sortBy, page, pageSize }:any) {
   const response = await axios.get(
-    "http://dcms-backend.test/api/" + "dentists",{
+    "/api/dentists",{
       params: { search,
         sortBy:sortBy.field, 
         direction:sortBy.direction, 
@@ -14,13 +14,13 @@ export async function getDentists({ search, sortBy, page, pageSize }:any) {
 }
 
 export async function storeDentist(newDentist:any) {
-  return axios.post("http://dcms-backend.test/api/" + "dentists", newDentist)
+  return axios.post("/api/dentists", newDentist)
 }
 
 export async function updateDentist(dentist:any,id:number) {
-  return axios.put("http://dcms-backend.test/api/" + "dentists/"+id, dentist)
+  return axios.put("/api/dentists/"+id, dentist)
 }
 
 export async function destoryDentist(id:number) {
-  return axios.delete("http://dcms-backend.test/api/" + "dentists/"+id)
+  return axios.delete("/api/dentists/"+id)
 }

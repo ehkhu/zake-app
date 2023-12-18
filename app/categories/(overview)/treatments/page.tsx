@@ -21,7 +21,7 @@ const Page =  async (params:any) => {
           </div>
         <div className="flex justify-between">
         <AddTreatmentType />
-        <Button variant="secondary">Export csv</Button>
+        {/* <Button variant="secondary">Export csv</Button> */}
         </div>
         <TreatmentTypesTable></TreatmentTypesTable>
       </div>

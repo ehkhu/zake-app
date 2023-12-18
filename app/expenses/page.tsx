@@ -4,22 +4,10 @@ import Search from "@/ui/Search";
 import { AddExpense } from "@/features/expenses/AddExpense";
 import AdminLayout from "@/ui/Layout/Admin";
 import SidebarLayout from "@/ui/side-layout";
-import { Button } from "@/components/ui/button";
-import {
-  QueryClient,
-  dehydrate,
-  HydrationBoundary,
-} from "@tanstack/react-query";
-import { getAllExpenseTypes } from "@/services/apiExpenseTypes";
 import FilterByDays from "@/ui/matric-combobox";
 
-const Page = async (params: any) => {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ["allExpenseTypes"],
-    queryFn: getAllExpenseTypes,
-  });
 
+const Page = async (params: any) => {
   return (
     <>
       <AdminLayout>
@@ -32,13 +20,10 @@ const Page = async (params: any) => {
               </div>
             </div>
             <div className="flex justify-between">
-            {/* <HydrationBoundary state={dehydrate(queryClient)}> */}
               <AddExpense />
-            {/* </HydrationBoundary> */}
               <FilterByDays></FilterByDays>
-              {/* <Button variant="secondary">Export csv</Button> */}
             </div>
-              <ExpensesTable></ExpensesTable>
+            <ExpensesTable/>
           </div>
         </SidebarLayout>
       </AdminLayout>
