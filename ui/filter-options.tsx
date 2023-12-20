@@ -36,9 +36,11 @@ function FilterOptions({ filterField, options}:any) {
 
   return (
     <div>
+    <div className='pb-1'>
       <Label className='capitalize'>{fitlerTitle}</Label>
+    </div>
     <Select onValueChange={handleFilter} defaultValue={currentFilter}>
-      <SelectTrigger className="w-full">
+      <SelectTrigger>
         <SelectValue placeholder="Expense Types" />
       </SelectTrigger>
       <SelectContent>

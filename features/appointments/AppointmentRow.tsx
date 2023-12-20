@@ -29,39 +29,34 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CreateTreatmentForm } from "./CreateTreatmentForm";
+import { CreateAppointmentForm } from "./CreateAppointmentForm";
 import { useState } from "react";
-import { useDeleteTreatment } from "./useDeleteTreatment";
+import { useDeleteAppointment } from "./useDeleteAppointment";
 import { useToast } from "@/components/ui/use-toast";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 /*
-id: 2,
-appointment_id: 1,
-treatment_type: "filling",
-treatment_date: "2023-12-20 10:38:11",
-duration: 60,
-notes: "Cavity filling",
-charge_amount: "100000.00",
-created_at: "2023-12-20T04:08:11.000000Z",
-updated_at: "2023-12-20T04:08:11.000000Z"
+"appointment date",
+  "appointment on", // appointment_type.name
+  "notes",
+  "amount",
+  
 */
-export function TreatmentRow({ treatment,selectedIds,onHandlecheck }: any) {
+export function AppointmentRow({ appointment,selectedIds,onHandlecheck }: any) {
   
   const { toast } = useToast();
   const [openDelete, setOpenDelete] = useState(false);
   const [idToDelete, setidToDelete] = useState();
   const {
-  id,
-  appointment_id,
-  treatment_type,
-  treatment_date,
-  duration,
-  notes,
-charge_amount,
-  } = treatment;
-  const {deleteTreatment,isDeleting} = useDeleteTreatment();
-  const handleDelete = (treatmentId:any)=>{
-    deleteTreatment(treatmentId,{onSuccess:()=>{
+    id,
+    appointment_date,
+    notes,
+    status
+  } = appointment;
+  const {deleteAppointment,isDeleting} = useDeleteAppointment();
+  const handleDelete = (appointmentId:any)=>{
+    deleteAppointment(appointmentId,{onSuccess:()=>{
       //on succcess
     },
     onError: (err) => onError(err)
@@ -75,6 +70,7 @@ charge_amount,
         description: errors.message,
       });
   }
+  
   return (
     <TableRow>
       <TableCell className="py-2">
@@ -83,12 +79,12 @@ charge_amount,
         onCheckedChange={()=>onHandlecheck(id)}
         />
       </TableCell>
-      <TableCell className="py-2">{appointment_id}</TableCell>
-      <TableCell className="py-2">{treatment_type}</TableCell>
-      <TableCell className="py-2">{treatment_date}</TableCell>
-      <TableCell className="py-2">{duration}</TableCell>
+      <TableCell className="py-2">{appointment_date}</TableCell>
+      <TableCell className="py-2">{appointment.patient.name}</TableCell>
+      <TableCell className="py-2">{appointment.dentist.name}</TableCell>
       <TableCell className="py-2">{notes}</TableCell>
-      <TableCell className="py-2 font-medium text-right">{charge_amount}</TableCell>
+      <TableCell className="py-2"><Badge className={status=='completed'?"bg-green-600 text-white":""} variant={status=='cancelled'?"destructive":"default"}>{status}</Badge></TableCell>
+      {/* //'scheduled, cancelled, completed' */}
       <TableCell className="py-2">
         <Dialog>
           <DropdownMenu>
@@ -101,7 +97,11 @@ charge_amount,
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-              <DropdownMenuItem>View</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href={`/appointments/${id}`}>
+                  View Detail
+                </Link>
+                </DropdownMenuItem>
               <DropdownMenuItem>
                 <DialogTrigger asChild>
                   <span className="w-full">
@@ -116,11 +116,11 @@ charge_amount,
           </DropdownMenu>
           <DialogContent className="sm:max-w-md" style={{ maxWidth: 650 }}>
             <DialogHeader>
-              <DialogTitle>Edit Treatment</DialogTitle>
+              <DialogTitle>Edit Appointment</DialogTitle>
             </DialogHeader>
             <div className="flex items-center space-x-2">
               <div className="grid flex-1 gap-2">
-                <CreateTreatmentForm treatmentToEdit={treatment} />
+                <CreateAppointmentForm appointmentToEdit={appointment} />
                 
               </div>
             </div>
@@ -138,7 +138,7 @@ charge_amount,
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete your
-              treatment record and remove your data from our servers.
+              appointment record and remove your data from our servers.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

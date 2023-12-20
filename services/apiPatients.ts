@@ -14,6 +14,12 @@ export async function getPatients({ search, sortBy, page, pageSize }:any) {
   return response.data;
 }
 
+export async function getAllPatients() {
+  const response = await axios.get(
+    "/api/all_patients");
+  return response.data;
+}
+
 export async function storePatient(newPatient:any) {
   return axios.post("/api/patients", newPatient)
 }

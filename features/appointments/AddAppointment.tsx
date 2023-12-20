@@ -9,13 +9,13 @@ import {
     DialogTitle,
     DialogTrigger,
   } from "@/components/ui/dialog"
-import { CreateTreatmentForm } from "./CreateTreatmentForm";
-export function AddTreatment({appointment_id}:any){
+import { CreateAppointmentForm } from "./CreateAppointmentForm";
+export function AddAppointment(){
     return (
     <>
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default">New Treatment</Button>
+        <Button variant="default">Add Appointment</Button>
       </DialogTrigger>
       
       <DialogContent className="sm:max-w-md"  style={{ maxWidth: 650}}>
@@ -24,7 +24,7 @@ export function AddTreatment({appointment_id}:any){
         </DialogHeader>
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2">
-            <CreateTreatmentForm forAppointment={appointment_id}/>
+            <CreateAppointmentForm/>
           </div>
         </div>
       </DialogContent>

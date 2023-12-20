@@ -6,7 +6,13 @@ import * as z from "zod";
 import { CalendarIcon, CodeSandboxLogoIcon } from "@radix-ui/react-icons";
 import { format} from "date-fns";
 import { Button } from "@/components/ui/button";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import {
   Command,
   CommandEmpty,
@@ -33,69 +39,83 @@ import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
-import { useCreateTreatment } from "./useCreateTreatment";
-import { useEditTreatment } from "./useEditTreatment";
+import { useCreateAppointment } from "./useCreateAppointment";
+import { useEditAppointment } from "./useEditAppointment";
 import { Check, ChevronsUpDown } from "lucide-react"
 import { useQuery } from "@tanstack/react-query";
-import { getAllTreatmentTypes } from "@/services/apiTreatmentTypes";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { getAllPatients } from "@/services/apiPatients";
+import { getAllDentists } from "@/services/apiDentists";
 
 const targetTimeZone = "Asia/Yangon";
 
 const formSchema = z.object({
+  patient_id: z.string({
+    required_error: "Please select a patient.",
+  }),
+  dentist_id: z.string({
+    required_error: "Please select a patient.",
+  }),
   notes: z.string(),
-  appointment_id:z.number(),
-  charge_amount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
-    message: "Expected number, received a string"
+  status: z
+  .string({
+    required_error: "Please select an status.",
   }),
-  treatment_date: z.date({
-    required_error: "Treatment Date is required.",
-  }),
-  treatment_type: z.string({
-    required_error: "Please select a treatment type.",
+  appointment_date: z.date({
+    required_error: "Appointment Date is required.",
   }),
 });
 
-let treatment_types = [
-  { label: "English", value: "en",charge_amount:"10" },
+let patients = [
+  { label: "English", value: "en" },
 ];
 
-export function CreateTreatmentForm( {forAppointment,treatmentToEdit = {}}:any) {
+let dentists = [
+  { label: "English", value: "en" },
+];
+
+export function CreateAppointmentForm( {appointmentToEdit = {}}:any) {
+  //Fetch Patient 
+  //Fetch Dentist
+  //Create Appointment
+
   // console.log("Add exponse exaonseList", expList);
   const {
-    isLoading,
-    data,
-    error,
+    isLoading:patientLoading,
+    data:patientData,
+    error:patientError,
   }=useQuery({
-    queryKey: ["allTreatmentTypes"],
-    queryFn:getAllTreatmentTypes
+    queryKey: ["allPatients"],
+    queryFn:getAllPatients
+  });
+
+  const {
+    isLoading:dentistLoading,
+    data:dentistData,
+    error:dentistError,
+  }=useQuery({
+    queryKey: ["allPatients"],
+    queryFn:getAllDentists
   });
   
   const { toast } = useToast();
   const [errors, setErrors] = useState<any>({});
-  if(data) treatment_types = data.data;
-  console.log('treatment type',treatment_types);
+  if(patientData) patients = patientData.data;
+  if(dentistData) dentists = dentistData.data;
   const currentDate = new Date();
-  /*
-  ref model 
-  id: 1,
-  amount: "63.87",
-  treatment_date: "1988-09-16",
-  notes: "Error voluptatem earum assumenda rerum. Vitae rerum sit adipisci aut quam maxime et. Aut porro ut qui facilis nihil ut.",
-  created_at: "2023-12-02 15:53:00",
-  updated_at: "2023-12-02 15:53:00",
-  treatment_type: 11,
-  */
+  
   //for edit 
   let idToUpdate = 0;
-  let editValues:any = treatmentToEdit;
+  let editValues:any = appointmentToEdit;
   const isEditSession = Boolean(editValues.id);
   if(isEditSession){
     idToUpdate = editValues.id;
     editValues = {
       ...editValues,
-      treatment_type:editValues.treatment_type.toString(),
-      treatment_date: new Date(editValues.treatment_date),
+      patient_id:editValues.patient_id.toString(),
+      dentist_id:editValues.dentist_id.toString(),
+      appointment_date: new Date(editValues.appointment_date),
     };
     // console.log(editValues)
   };
@@ -104,14 +124,12 @@ export function CreateTreatmentForm( {forAppointment,treatmentToEdit = {}}:any) 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: isEditSession ? editValues : {
-      appointment_id:Number(forAppointment),
-      treatment_type:"",
-      notes: "",
-      charge_amount:"",
+      status:'scheduled',
+      notes:''
     },
   });
-  const {createTreatment,isCreating} = useCreateTreatment();
-  const {editTreatment,isUpdating} = useEditTreatment();
+  const {createAppointment,isCreating} = useCreateAppointment();
+  const {editAppointment,isUpdating} = useEditAppointment();
   const isWorking:boolean= isCreating || isUpdating;
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -130,13 +148,13 @@ export function CreateTreatmentForm( {forAppointment,treatmentToEdit = {}}:any) 
     // })
     // return 0;
     if(isEditSession){
-      editTreatment({treatment:values,id:idToUpdate},{onSuccess:()=>{
+      editAppointment({appointment:values,id:idToUpdate},{onSuccess:()=>{
         setErrors({});
       },
       onError: (err) => onError(err)
       });
     }else{
-      createTreatment(values,{onSuccess:()=>{
+      createAppointment(values,{onSuccess:()=>{
         form.reset();
         setErrors({});
       },
@@ -163,17 +181,17 @@ export function CreateTreatmentForm( {forAppointment,treatmentToEdit = {}}:any) 
       });
     }
   }
-  if(isLoading) return 'loading...';
+  // if(isLoading) return 'loading...';
   return (
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="treatment_type"
+          name="dentist_id"
           render={({ field }) => (
             <FormItem className="grid grid-cols-4 items-center gap-4">
-              <FormLabel>Treatement Type</FormLabel>
+              <FormLabel>Dentist</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                 <FormControl className="col-span-3">
@@ -186,42 +204,37 @@ export function CreateTreatmentForm( {forAppointment,treatmentToEdit = {}}:any) 
                       )}
                     >
                       {field.value
-                        ? treatment_types.find(
-                            (treatment_type) => treatment_type.value === field.value
+                        ? dentists.find(
+                            (dentist_id) => dentist_id.value === field.value
                           )?.label
-                        : "Select Treatment ..."}
+                        : "Select Dentist ..."}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-0">
                   <Command>
-                    <CommandInput placeholder="Search treatment type..." />
-                    <CommandEmpty>No treatment type found.</CommandEmpty>
+                    <CommandInput placeholder="Search dentist type..." />
+                    <CommandEmpty>No dentist type found.</CommandEmpty>
                     <CommandGroup>
                       <ScrollArea className="h-72 w-48">
-                      {treatment_types.map((treatment_type) => (
+                      {dentists.map((dentist_id) => (
                         <CommandItem
-                          value={treatment_type.label}
-                          key={treatment_type.value}
+                          value={dentist_id.label}
+                          key={dentist_id.value}
                           onSelect={() => {
-                            form.setValue("treatment_type", treatment_type.value)
-                            let t:any = treatment_types.find(
-                              (tt) => tt.value === treatment_type.value
-                            )
-                            form.setValue("charge_amount",t?.charge_amount);
-                            // console.log(t?.charge_amount);
+                            form.setValue("dentist_id", dentist_id.value)
                           }}
                         >
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4",
-                              treatment_type.value === field.value
+                              dentist_id.value === field.value
                                 ? "opacity-100"
                                 : "opacity-0"
                             )}
                           />
-                          {treatment_type.label}
+                          {dentist_id.label}
                         </CommandItem>
                       ))}
                       </ScrollArea>
@@ -230,12 +243,76 @@ export function CreateTreatmentForm( {forAppointment,treatmentToEdit = {}}:any) 
                 </PopoverContent>
               </Popover>
               {/* <FormDescription>
-                This is the treatment_type that will be used in the dashboard.
+                This is the dentist_id that will be used in the dashboard.
               </FormDescription> */}
               <FormMessage className="col-span-3"/>
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="patient_id"
+          render={({ field }) => (
+            <FormItem className="grid grid-cols-4 items-center gap-4">
+              <FormLabel>Patient</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                <FormControl className="col-span-3">
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? patients.find(
+                            (patient_id) => patient_id.value === field.value
+                          )?.label
+                        : "Select Patient ..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search patient type..." />
+                    <CommandEmpty>No patient type found.</CommandEmpty>
+                    <CommandGroup>
+                      <ScrollArea className="h-72 w-48">
+                      {patients.map((patient_id) => (
+                        <CommandItem
+                          value={patient_id.label}
+                          key={patient_id.value}
+                          onSelect={() => {
+                            form.setValue("patient_id", patient_id.value)
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              patient_id.value === field.value
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                          {patient_id.label}
+                        </CommandItem>
+                      ))}
+                      </ScrollArea>
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              {/* <FormDescription>
+                This is the patient_id that will be used in the dashboard.
+              </FormDescription> */}
+              <FormMessage className="col-span-3"/>
+            </FormItem>
+          )}
+        />
+        
           <FormField
             control={form.control}
             name="notes"
@@ -243,7 +320,7 @@ export function CreateTreatmentForm( {forAppointment,treatmentToEdit = {}}:any) 
               <FormItem className="grid grid-cols-4 items-center gap-4">
                 <FormLabel>Note</FormLabel>
                 <FormControl className="col-span-3">
-                  <Input placeholder="Treatment Note" {...field} />
+                  <Input placeholder="Appointment Note" {...field} />
                 </FormControl>
                 <FormMessage className="col-span-3"/>
                 {errors.nam && (
@@ -256,48 +333,35 @@ export function CreateTreatmentForm( {forAppointment,treatmentToEdit = {}}:any) 
           />
 
           
-          <FormField
-            control={form.control}
-            name="charge_amount"
-            render={({ field }) => (
-              <FormItem className="grid grid-cols-4 items-center gap-4">
-                <FormLabel>Amount</FormLabel>
-                <FormControl className="col-span-3">
-                  <Input placeholder="Amount" {...field} type="number"/>
+      <FormField
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <FormItem className="grid grid-cols-4 items-center gap-4">
+              <FormLabel>Status</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl className="col-span-3">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
                 </FormControl>
-                <FormMessage className="col-span-3"/>
-                {errors.charge_amount && (
-                  <div className="text-red-500 text-sm mt-1">
-                    {errors.charge_amount[0]}
-                  </div>
-                )}
-              </FormItem>
-            )}
-          />
+                <SelectContent>
+                {/* scheduled, cancelled, completed */}
+                  <SelectItem value="scheduled">Scheduled</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage className="col-span-3"/>
+            </FormItem>
+          )}
+        />
           <FormField
             control={form.control}
-            name="appointment_id"
+            name="appointment_date"
             render={({ field }) => (
               <FormItem className="grid grid-cols-4 items-center gap-4">
-                <FormLabel>Appointment</FormLabel>
-                <FormControl className="col-span-3">
-                  <Input placeholder="Appointment" {...field} disabled={true}/>
-                </FormControl>
-                <FormMessage className="col-span-3"/>
-                {errors.appointment_id && (
-                  <div className="text-red-500 text-sm mt-1">
-                    {errors.appointment_id[0]}
-                  </div>
-                )}
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="treatment_date"
-            render={({ field }) => (
-              <FormItem className="grid grid-cols-4 items-center gap-4">
-                <FormLabel>Treatment Date</FormLabel>
+                <FormLabel>Appointment Date</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl className="col-span-3">

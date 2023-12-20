@@ -13,6 +13,12 @@ export async function getDentists({ search, sortBy, page, pageSize }:any) {
   return response.data;
 }
 
+export async function getAllDentists() {
+  const response = await axios.get(
+    "/api/all_dentists");
+  return response.data;
+}
+
 export async function storeDentist(newDentist:any) {
   return axios.post("/api/dentists", newDentist)
 }

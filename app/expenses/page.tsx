@@ -5,6 +5,8 @@ import { AddExpense } from "@/features/expenses/AddExpense";
 import AdminLayout from "@/ui/Layout/Admin";
 import SidebarLayout from "@/ui/side-layout";
 import FilterByDays from "@/ui/matric-combobox";
+import FilterOptions from "@/ui/filter-options";
+import TableOperations from "@/ui/table-operations";
 
 
 const Page = async (params: any) => {
@@ -21,7 +23,18 @@ const Page = async (params: any) => {
             </div>
             <div className="flex justify-between">
               <AddExpense />
-              <FilterByDays></FilterByDays>
+              <TableOperations>
+                <FilterOptions
+                    filterField="in_days"
+                    options={[
+                      {value: "all",label: "Select Days...",},
+                      {value: "1",label: "Today"},
+                      {value: "5",label: "5 Days"},
+                      {value: "10",label: "10 Days"},
+                      {value: "30",label: "30 Days"},
+                    ]}
+                  />
+                </TableOperations>
             </div>
             <ExpensesTable/>
           </div>

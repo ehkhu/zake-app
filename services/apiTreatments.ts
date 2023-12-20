@@ -1,6 +1,7 @@
 import axios from "@/lib/axios";
 
-export async function getTreatments({ search, sortBy, page, pageSize , in_days}:any) {
+export async function getTreatments({ search, sortBy, page, pageSize , in_days, appointment_id}:any) {
+  console.log("get Treatment", appointment_id);
   const response = await axios.get(
     "/api/treatments",{
       params: { search,
@@ -8,7 +9,8 @@ export async function getTreatments({ search, sortBy, page, pageSize , in_days}:
         direction:sortBy.direction, 
          page,
          pageSize,
-         in_days
+         in_days,
+         appointment_id
          }
     }
   );

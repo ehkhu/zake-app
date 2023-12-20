@@ -27,10 +27,10 @@ export function MainNav({
         Overviews
       </Link>
       <Link
-        href="/treatments"
+        href="/appointments"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Treatments
+        Appointments
       </Link>
       <Link
         href="/expenses"

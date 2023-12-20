@@ -26,4 +26,3 @@ export async function updateExpense(expense:any,id:number) {
 export async function destoryExpense(id:number) {
   return axios.delete("/api/expenses/"+id)
 }
-

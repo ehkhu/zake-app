@@ -1,8 +1,8 @@
-import { getTreatments } from "@/services/apiTreatments";
+import { getAppointments } from "@/services/apiAppointments";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams} from 'next/navigation';
 
-export function useTreatments(appointmentID:null){
+export function useAppointments(){
   // const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   
@@ -19,37 +19,38 @@ export function useTreatments(appointmentID:null){
   // by days
   const in_days = !searchParams.get("in_days") ? 0 : Number(searchParams.get("in_days"));
 
+  // status
+  const status = !searchParams.get("status") ? '' : searchParams.get("status")!='all'?searchParams.get("status"):'';
+
   // PAGINATION
   const pageSize = !searchParams.get("pageSize") ? 10 : Number(searchParams.get("pageSize"));
-  const appointment_id = appointmentID;
-  console.log("use Treatment", appointment_id);
   const {
       isLoading,
-      data:treatments,
+      data:appointments,
       error,
     } = useQuery({
-      queryKey: ["treatments",search, sortBy, page, pageSize, in_days,appointment_id],
-      queryFn:() => getTreatments({ search, sortBy, page, pageSize, in_days,appointment_id}),
+      queryKey: ["appointments",search, sortBy, page, pageSize, in_days,status],
+      queryFn:() => getAppointments({ search, sortBy, page, pageSize, in_days, status }),
     });
     
     /*
     // PRE-FETCHING
     let pageCount = 0
-    if(treatments){
-      pageCount = treatments.data.last_page//Math.ceil(total / pageSize); 
+    if(appointments){
+      pageCount = appointments.data.last_page//Math.ceil(total / pageSize); 
     }
     
   if (page < pageCount)
     queryClient.prefetchQuery({
-      queryKey: ["treatments", search, sortBy, page + 1,pageSize],
-      queryFn: () => getTreatments({ search, sortBy, page: page + 1,pageSize }),
+      queryKey: ["appointments", search, sortBy, page + 1,pageSize],
+      queryFn: () => getAppointments({ search, sortBy, page: page + 1,pageSize }),
     });
 
   if (page > 1)
     queryClient.prefetchQuery({
-      queryKey: ["treatments", search, sortBy, page - 1,pageSize],
-      queryFn: () => getTreatments({ search, sortBy, page: page - 1,pageSize }),
+      queryKey: ["appointments", search, sortBy, page - 1,pageSize],
+      queryFn: () => getAppointments({ search, sortBy, page: page - 1,pageSize }),
     });
     */
-      return{isLoading,treatments,error}
+      return{isLoading,appointments,error}
 }

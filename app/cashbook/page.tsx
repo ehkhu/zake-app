@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
+import TableOperations from "@/ui/table-operations";
 const Page = async (params: any) => {
   return (
     <>
@@ -23,15 +24,8 @@ const Page = async (params: any) => {
               {/* table operations */}
               <div className="flex justify-between"> 
                 <Search placeholder="Search... "></Search>
-                <Popover>
-                  <PopoverTrigger asChild>
-                  <Button variant="outline" size="icon">
-                      <Filter className="w-4 h-4"></Filter>
-                  </Button>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                  <div className="flex flex-col space-y-4 content-center">
-                  <FilterOptions
+                <TableOperations>
+                <FilterOptions
                     filterField="in_days"
                     options={[
                       {value: "all",label: "Select Days...",},
@@ -49,9 +43,7 @@ const Page = async (params: any) => {
                       {value: "income",label: "Income"},
                     ]}
                   />
-                </div>
-                  </PopoverContent>
-                </Popover>
+                </TableOperations>
               </div>
               {/* end table operations */}
             <CashbooksTable></CashbooksTable>
