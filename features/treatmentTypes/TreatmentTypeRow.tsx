@@ -40,8 +40,8 @@ export function TreatmentTypeRow({ treatmentType,selectedIds,onHandlecheck }: an
   const [idToDelete, setidToDelete] = useState();
   const {
     id,
-    name,
-    default_cost,
+    treatment_type,
+    charge_amount,
   } = treatmentType;
   const {deleteTreatmentType,isDeleting} = useDeleteTreatmentType();
   const handleDelete = (treatmentTypeId:any)=>{
@@ -67,8 +67,8 @@ export function TreatmentTypeRow({ treatmentType,selectedIds,onHandlecheck }: an
         onCheckedChange={()=>onHandlecheck(id)}
         />
       </TableCell>
-      <TableCell className="py-2">{name}</TableCell>
-      <TableCell className="py-2">{default_cost}</TableCell>
+      <TableCell className="py-2">{treatment_type}</TableCell>
+      <TableCell className="py-2">{charge_amount}</TableCell>
       <TableCell className="py-2">
         <Dialog>
           <DropdownMenu>
@@ -81,7 +81,7 @@ export function TreatmentTypeRow({ treatmentType,selectedIds,onHandlecheck }: an
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-              <DropdownMenuItem>View</DropdownMenuItem>
+              {/* <DropdownMenuItem>View</DropdownMenuItem> */}
               <DropdownMenuItem>
                 <DialogTrigger asChild>
                   <span className="w-full">

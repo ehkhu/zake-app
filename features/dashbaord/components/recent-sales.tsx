@@ -1,13 +1,42 @@
+'use client'
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
+import { useRecentAppointment } from "../useRecentAppointments"
+import { Badge } from "@/components/ui/badge";
 
 export function RecentSales() {
+
+  const {
+    isLoading,
+    recentAppointment,
+    error,
+  } = useRecentAppointment();
+  if(isLoading)return "loading...";
   return (
     <div className="space-y-8">
-      <div className="flex items-center">
+      {
+        recentAppointment.data.map((appointment:any)=>(
+          <div className="flex items-center" key={appointment.id}>
+            {/* <Avatar className="h-9 w-9">
+              <AvatarImage src="/avatars/01.png" alt="Avatar" />
+              <AvatarFallback>OM</AvatarFallback>
+            </Avatar> */}
+            <div className="ml-4 space-y-1">
+              <p className="text-sm font-medium leading-none">{appointment.patient.name}</p>
+              <p className="text-sm text-muted-foreground">
+              {appointment.patient.contact_number}
+              </p>
+            </div>
+            <div className="ml-auto font-medium">
+            <Badge className={appointment.status=='completed'?"bg-green-600 text-white":""} variant={appointment.status=='cancelled'?"destructive":"default"}>{appointment.status}</Badge>
+              </div>
+          </div>
+        ))
+      }
+      {/* <div className="flex items-center">
         <Avatar className="h-9 w-9">
           <AvatarImage src="/avatars/01.png" alt="Avatar" />
           <AvatarFallback>OM</AvatarFallback>
@@ -65,7 +94,7 @@ export function RecentSales() {
           <p className="text-sm text-muted-foreground">sofia.davis@email.com</p>
         </div>
         <div className="ml-auto font-medium">+$39.00</div>
-      </div>
+      </div> */}
     </div>
   )
 }

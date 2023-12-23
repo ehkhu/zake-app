@@ -33,6 +33,7 @@ import { CreateDentistForm } from "./CreateDentistForm";
 import { useState } from "react";
 import { useDeleteDentist } from "./useDeleteDentist";
 import { useToast } from "@/components/ui/use-toast";
+import Link from "next/link";
 
 export function DentistRow({ dentist,selectedIds,onHandlecheck }: any) {
   const { toast } = useToast();
@@ -87,7 +88,11 @@ export function DentistRow({ dentist,selectedIds,onHandlecheck }: any) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-              <DropdownMenuItem>View</DropdownMenuItem>
+              <DropdownMenuItem>
+              <Link href={`/dentists/${id}`}>
+                View
+              </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <DialogTrigger asChild>
                   <span className="w-full">

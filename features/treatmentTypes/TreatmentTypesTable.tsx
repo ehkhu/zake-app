@@ -19,8 +19,8 @@ import { LoadingTable } from "@/ui/LoadingTable";
 import Error from "@/ui/error";
 
 const tHeads = [
-  "name",
-  "default_cost",
+  "treatment type",
+  "charge amount",
   "",
 ];
 

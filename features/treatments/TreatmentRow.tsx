@@ -101,7 +101,7 @@ charge_amount,
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-              <DropdownMenuItem>View</DropdownMenuItem>
+              {/* <DropdownMenuItem>View</DropdownMenuItem> */}
               <DropdownMenuItem>
                 <DialogTrigger asChild>
                   <span className="w-full">

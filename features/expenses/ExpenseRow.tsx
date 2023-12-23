@@ -92,7 +92,7 @@ export function ExpenseRow({ expense,selectedIds,onHandlecheck }: any) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-              <DropdownMenuItem>View</DropdownMenuItem>
+              {/* <DropdownMenuItem>View</DropdownMenuItem> */}
               <DropdownMenuItem>
                 <DialogTrigger asChild>
                   <span className="w-full">

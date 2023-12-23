@@ -1,0 +1,23 @@
+.timeline {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background-color: #333;
+  }

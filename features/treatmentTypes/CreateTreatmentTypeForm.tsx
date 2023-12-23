@@ -32,10 +32,10 @@ import { useCreateTreatmentType } from "./useCreateTreatmentType";
 import { useEditTreatmentType } from "./useEditTreatmentType";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
+  treatment_type: z.string().min(2, {
     message: "name must be at least 2 characters.",
   }),
-  default_cost: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+  charge_amount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
     message: "Expected number, received a string"
   }),
 });
@@ -114,12 +114,12 @@ export function CreateTreatmentTypeForm({ treatmentTypeToEdit = {}}) {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="name"
+            name="treatment_type"
             render={({ field }) => (
               <FormItem className="grid grid-cols-4 items-center gap-4">
-                <FormLabel>Name</FormLabel>
+                <FormLabel>Treatment Type</FormLabel>
                 <FormControl className="col-span-3">
-                  <Input placeholder="TreatmentType Name" {...field} />
+                  <Input placeholder="Treatment Type " {...field} />
                 </FormControl>
                 <FormMessage className="col-span-3"/>
                 {errors.nam && (
@@ -134,12 +134,12 @@ export function CreateTreatmentTypeForm({ treatmentTypeToEdit = {}}) {
           
           <FormField
             control={form.control}
-            name="default_cost"
+            name="charge_amount"
             render={({ field }) => (
               <FormItem className="grid grid-cols-4 items-center gap-4">
                 <FormLabel>Default Cost</FormLabel>
                 <FormControl className="col-span-3">
-                  <Input placeholder="cost" {...field} type="number"/>
+                  <Input placeholder="charge" {...field} type="number"/>
                 </FormControl>
                 <FormMessage className="col-span-3"/>
                 {errors.default_cost && (

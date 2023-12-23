@@ -20,6 +20,12 @@ export async function getAllPatients() {
   return response.data;
 }
 
+export async function getPatient({id}:any) {
+  const response = await axios.get(
+    "/api/patients/"+id);
+  return response.data;
+}
+
 export async function storePatient(newPatient:any) {
   return axios.post("/api/patients", newPatient)
 }

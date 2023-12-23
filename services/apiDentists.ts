@@ -30,3 +30,9 @@ export async function updateDentist(dentist:any,id:number) {
 export async function destoryDentist(id:number) {
   return axios.delete("/api/dentists/"+id)
 }
+
+export async function getDentist({id}:any) {
+  const response = await axios.get(
+    "/api/dentists/"+id);
+  return response.data;
+}
