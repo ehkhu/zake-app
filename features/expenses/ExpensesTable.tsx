@@ -81,7 +81,7 @@ export function ExpensesTable() {
   };
     return (
       <>
-          <div className="rounded-md border">
+          <div className="rounded-md border h-screen">
             <Table>
               <TableHeader>
                 <TableRow>

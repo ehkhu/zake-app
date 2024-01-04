@@ -14,8 +14,11 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useAuth } from "@/hooks/auth"
+import { UserType } from "@/types/User"
 
-export function UserNav() {
+export function UserNav({user}:{user:UserType}) {
+  const { logout } = useAuth({ middleware: 'auth' })
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -29,13 +32,13 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">shadcn</p>
+            <p className="text-sm font-medium leading-none">{user?.name}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              m@example.com
+              {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        {/* <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
             Profile
@@ -50,10 +53,12 @@ export function UserNav() {
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>New Team</DropdownMenuItem>
-        </DropdownMenuGroup>
+        </DropdownMenuGroup> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          Log out
+          <Button onClick={logout} variant="ghost" className="p-0 h-5">
+            Log out
+          </Button>
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
